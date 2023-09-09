@@ -96,7 +96,7 @@ def launch_gradio_by_blocks():
                     txt = gr.Textbox(
                         scale=4,
                         show_label=False,
-                        placeholder="Hello",
+                        placeholder=" 请输入你想咨询的问题",
                         container=False,
                     )
                     # btn = gr.Button("Submit")
