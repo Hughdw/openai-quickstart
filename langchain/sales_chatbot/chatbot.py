@@ -10,6 +10,7 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 
+# 是否激活 AI 回复问题
 ENABLE_CHAT = False
 
 
@@ -34,7 +35,6 @@ def initialize_sales_bot(vector_store_dir: str = "real_estate_sales"):
     )
     # 返回向量数据库的检索结果
     SALES_BOT.return_source_documents = True
-    # SALES_BOT.callbacks = [test1]
 
     return SALES_BOT
 
