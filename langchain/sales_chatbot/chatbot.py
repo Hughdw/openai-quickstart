@@ -10,18 +10,14 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 
+ENABLE_CHAT = False
 
-# Scene = Enum("Scene", ["房产", "电器", "家装", "教育"])
+
 @unique
 class Scene_enum(Enum):
     房产 = "real_estate"
     iPhone = "iphone"
     英语培训 = "english_training"
-
-
-def test1(a, b):
-    print(a)
-    print(b)
 
 
 def initialize_sales_bot(vector_store_dir: str = "real_estate_sales"):
@@ -56,12 +52,10 @@ def bot(history, text):
     # print(f"bot-[text]{text}")
     query = history[-1][0]
 
-    enable_chat = False
-
     ans = SALES_BOT({"query": query})
 
     response = "这个问题我要问问领导"
-    if ans["source_documents"] or enable_chat:
+    if ans["source_documents"] or ENABLE_CHAT:
         print(f"[result]{ans['result']}")
         print(f"[source_documents]{ans['source_documents']}")
         response = ans["result"]
@@ -80,16 +74,25 @@ def change_scene(choice):
     return gr.Chatbot.update(value="")
 
 
+def change_enable_chat(enable):
+    global ENABLE_CHAT
+    ENABLE_CHAT = enable
+
+
 def launch_gradio_by_blocks():
     with gr.Blocks(title="销售机器人") as blocks:
         with gr.Row():
             with gr.Column(scale=1):
-                scene_radio = gr.Radio(
-                    [(member.name, member.value) for member in Scene_enum],
-                    label="切换场景",
-                    info="选择一个要咨询的场景?",
-                    value=Scene_enum.房产,
-                )
+                with gr.Row():
+                    scene_radio = gr.Radio(
+                        [(member.name, member.value) for member in Scene_enum],
+                        label="切换场景",
+                        info="选择一个要咨询的场景",
+                        value=Scene_enum.房产,
+                    )
+                    enable_chat_checkbox = gr.Checkbox(
+                        label="激活 AI", info="通过 AI 更好的回答问题", value=ENABLE_CHAT
+                    )
             with gr.Column(scale=4):
                 chatbot = gr.Chatbot([], elem_id="chatbot", bubble_full_width=False)
                 with gr.Row():
@@ -106,6 +109,8 @@ def launch_gradio_by_blocks():
         txt_msg.then(lambda: gr.update(interactive=True), None, [txt], queue=False)
 
         scene_radio.change(fn=change_scene, inputs=scene_radio, outputs=chatbot)
+
+        enable_chat_checkbox.change(fn=change_enable_chat, inputs=enable_chat_checkbox)
 
         # btn.click(add_text, [chatbot, txt], [chatbot, txt], queue=True).then(bot, chatbot,chatbot)
 
