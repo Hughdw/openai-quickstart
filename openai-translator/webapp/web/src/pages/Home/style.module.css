@@ -1,0 +1,26 @@
+.main {
+  /* background-color: black; */
+}
+.header {
+  text-align: center;
+  margin: 70px auto;
+}
+.content {
+  text-align: left;
+}
+.title_2 {
+  font-family: 'Nabla Regular';
+}
+.title_1 {
+  font-family: '阿里妈妈方圆体 VF Regular';
+}
+.upload_wrap {
+  height: 200px;
+}
+.upload {
+  display: block;
+}
+
+.operation {
+  margin-top: 50px;
+}
